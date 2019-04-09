@@ -21,6 +21,14 @@
             "package_name": "com.shyam.landoffreelancers",
             "certificate_hash": "e7655772aeda7fc6872f8cf03b563d62a8d2294a"
           }
+        },
+        {
+          "client_id": "168275164439-92d85srlgqio45oclsj45d8kdi2m3rk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shyam.landoffreelancers",
+            "certificate_hash": "f165c2187e0b0f53c5d0a82b0d0b9ee33fcf169d"
+          }
         }
       ],
       "api_key": [

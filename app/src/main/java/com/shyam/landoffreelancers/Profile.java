@@ -9,13 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Profile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class Profile extends AppCompatActivity  {
 private EditText cost,name,timings,phone;
 private Button submit;
 private Spinner spinner;
@@ -33,7 +34,6 @@ private String[] profs={"nothing","Photographer","Editor","Designer"};
         spinner=findViewById(R.id.profspinner);
          adapter=new ArrayAdapter<String>(this,R.layout.item,R.id.list_item,profs);
         spinner.setAdapter(adapter);
-        selected=profs[0];
         adapter.notifyDataSetChanged();
         submit=findViewById(R.id.upprof);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -46,15 +46,19 @@ private String[] profs={"nothing","Photographer","Editor","Designer"};
 
             }
         });
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected=parent.getSelectedItem().toString();
+                Toast.makeText(Profile.this, selected, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selected=adapter.getItem(position).toString();
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }

@@ -195,7 +195,8 @@ public class Maps extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==1001&&resultCode==RESULT_OK){
-
+            String response=data.getStringExtra("response");
+            Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
         }
     }
 
