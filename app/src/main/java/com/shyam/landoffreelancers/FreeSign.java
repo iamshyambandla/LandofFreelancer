@@ -66,6 +66,7 @@ public class FreeSign extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             selected=parent.getSelectedItem().toString();
+                Toast.makeText(FreeSign.this, selected, Toast.LENGTH_SHORT).show();
             }
 
             @Override
