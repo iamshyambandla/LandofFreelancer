@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "168275164439",
+    "firebase_url": "https://landoffreelancers.firebaseio.com",
+    "project_id": "landoffreelancers",
+    "storage_bucket": "landoffreelancers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168275164439:android:9d0d88741dbaaca8",
+        "android_client_info": {
+          "package_name": "com.shyam.landoffreelancers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168275164439-v6p7r4krnjf8inqheojih4asfidlqcne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shyam.landoffreelancers",
+            "certificate_hash": "e7655772aeda7fc6872f8cf03b563d62a8d2294a"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHEUFhHm-SFkAoHuIWY-h1ssb68anHrho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168275164439-autnmccmouim7fo0m3m5ssjr34m2cing.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
