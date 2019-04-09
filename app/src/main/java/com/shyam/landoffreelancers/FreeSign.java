@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
@@ -85,17 +86,27 @@ public class FreeSign extends AppCompatActivity {
                     mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString());
 
-                            Toast.makeText(FreeSign.this, "completed", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(FreeSign.this, MapActivity.class);
-                            startActivity(i);
                         }
 
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(FreeSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Toast.makeText(FreeSign.this, "completed", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(FreeSign.this, MapActivity.class);
+                                    startActivity(i);
+                                }
+                            });
+
+
                         }
                     });
 
