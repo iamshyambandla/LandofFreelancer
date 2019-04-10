@@ -17,6 +17,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private EditText email,password;
@@ -27,8 +33,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         if (FirebaseAuth.getInstance().getCurrentUser()!=null){
-            Intent intent=new Intent(MainActivity.this,Maps.class);
-            startActivity(intent);
+            FirebaseApp.initializeApp(getApplicationContext());
+            final DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+            String s=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            String[] m=s.split("@");
+            databaseReference.child("users").child(m[0]).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+
+
+                    if (dataSnapshot.getValue().toString().contentEquals("free")){
+                        Intent intent=new Intent(MainActivity.this,Maps.class);
+                        startActivity(intent);
+                    }else if (dataSnapshot.getValue().toString().contentEquals("user")){
+                        Intent intent=new Intent(MainActivity.this,UserMaps.class);
+                        startActivity(intent);
+                    }
+                }catch (Exception e){
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         }
         super.onStart();
     }

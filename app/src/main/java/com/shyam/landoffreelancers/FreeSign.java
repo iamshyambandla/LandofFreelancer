@@ -102,7 +102,10 @@ public class FreeSign extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
                                     Toast.makeText(FreeSign.this, "completed", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(FreeSign.this, MapActivity.class);
+                                    String[] m=email.getText().toString().split("@");
+                                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+                                    databaseReference.child("users").child(m[0]).setValue("free");
+                                    Intent i = new Intent(FreeSign.this, Maps.class);
                                     startActivity(i);
                                 }
                             });

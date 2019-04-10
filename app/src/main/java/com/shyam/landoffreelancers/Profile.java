@@ -43,6 +43,7 @@ private String[] profs={"nothing","Photographer","Editor","Designer"};
                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
                 Lancer lancer=new Lancer(name.getText().toString(),user.getUid().toString(),cost.getText().toString(),phone.getText().toString(),user.getEmail(),"Free",timings.getText().toString(),selected);
                 databaseReference.child("freeprof").child(lancer.getUid()).setValue(lancer);
+                databaseReference.child("profs").child(lancer.getUid()).setValue(selected);
 
             }
         });

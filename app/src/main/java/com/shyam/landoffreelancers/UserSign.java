@@ -18,6 +18,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +67,11 @@ public class UserSign extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             Toast.makeText(UserSign.this, "completed", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(UserSign.this, MapActivity.class);
+                            FirebaseApp.initializeApp(getApplicationContext());
+                            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+                            String[] m=email.getText().toString().split("@");
+                            databaseReference.child("users").child(m[0]).setValue("user");
+                            Intent i = new Intent(UserSign.this, UserMaps.class);
                             startActivity(i);
                         }
 
