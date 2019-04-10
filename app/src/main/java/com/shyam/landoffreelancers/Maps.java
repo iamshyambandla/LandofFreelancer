@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,6 +52,7 @@ public class Maps extends AppCompatActivity
     String resp;
     Location myloc;
     boolean state;
+    TextView text;
 
 
     @Override
@@ -67,6 +69,7 @@ public class Maps extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        text=findViewById(R.id.displayname);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -96,6 +99,11 @@ public class Maps extends AppCompatActivity
                 }
             }
         });
+        try {
+            text.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }catch (Exception e){
+
+        }
     }
 
     @Override
@@ -254,7 +262,9 @@ public class Maps extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot shot:dataSnapshot.getChildren()){
                     MyLoc loc=shot.getValue(MyLoc.class);
-                    if (loc.getLat()==marker.getPosition().latitude&&loc.getLang()==marker.getPosition().longitude){
+                    float[] lcs=new float[2];
+                    Location.distanceBetween(loc.getLat(),loc.getLang(),marker.getPosition().latitude,marker.getPosition().longitude,lcs);
+                    if (lcs[0]<2){
                         Intent intent=new Intent(Maps.this,Book.class);
                         intent.putExtra("key",shot.getKey());
                         intent.putExtra("lat",loc.getLat());

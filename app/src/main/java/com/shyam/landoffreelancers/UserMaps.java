@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,6 +47,7 @@ public class UserMaps extends AppCompatActivity
     String resp;
     Location myloc;
     boolean state;
+    TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class UserMaps extends AppCompatActivity
         getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.usermap);
         FirebaseApp.initializeApp(this);
+        text=findViewById(R.id.userdisplay);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mapFragment.getMapAsync(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -87,6 +90,11 @@ public class UserMaps extends AppCompatActivity
                 }
             }
         });
+        try {
+            text.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }catch (Exception e){
+
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Book extends AppCompatActivity {
-private TextView name,cost,distance,phone;
+private TextView name,cost,distance,phone,status;
 private Button call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ private Button call;
         distance=findViewById(R.id.distance);
         phone=findViewById(R.id.phone);
         call=findViewById(R.id.call);
+        status=findViewById(R.id.pstatus);
         Intent intent=getIntent();
         String key=intent.getStringExtra("key");
         final double lat=intent.getDoubleExtra("lat",0.0000);
@@ -37,9 +38,11 @@ private Button call;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Lancer profile=dataSnapshot.getValue(Lancer.class);
-                name.setText(profile.getName());
+
                 cost.setText(profile.getCost());
+                name.setText(profile.getName());
                 phone.setText(profile.getNumber());
+                status.setText(profile.getStatus());
                 float[] dist=new float[2];
                 Location.distanceBetween(lat,lang,dlat,dlang,dist);
                 distance.setText(String.valueOf(dist[0])+"m");
