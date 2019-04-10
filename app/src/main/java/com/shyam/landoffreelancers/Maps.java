@@ -154,7 +154,10 @@ public class Maps extends AppCompatActivity
         Intent intent=new Intent(Maps.this,MainActivity.class);
         startActivity(intent);
         }else if (id==R.id.nav_profile){
-            Intent intent=new Intent(Maps.this,Profile.class);
+            Intent intent=new Intent(Maps.this,Update.class);
+            String uid=FirebaseAuth.getInstance().getUid();
+            intent.putExtra("uid",uid);
+
             startActivity(intent);
         }
 

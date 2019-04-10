@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
     private EditText email,password;
     private Button signin;
-    private TextView signup;
+    private TextView signup,forgot;
     private FirebaseAuth mAuth;
 
     @Override
@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        forgot=findViewById(R.id.forgot);
+
         FirebaseApp.initializeApp(this);
         mAuth=FirebaseAuth.getInstance();
         signin.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +105,14 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "successfully signedin", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (email.getText().toString().length()>0){
+                    mAuth.sendPasswordResetEmail(email.getText().toString());
+                }
             }
         });
     }

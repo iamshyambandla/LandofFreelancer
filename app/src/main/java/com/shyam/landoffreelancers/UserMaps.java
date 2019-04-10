@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -40,7 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class UserMaps extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private GoogleMap map;
     private DatabaseReference databaseReference;
     private FusedLocationProviderClient fusedLocationClient;
@@ -157,6 +158,7 @@ public class UserMaps extends AppCompatActivity
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setAllGesturesEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setOnMarkerClickListener(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -213,5 +215,34 @@ public class UserMaps extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        databaseReference.child("locs").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot shot:dataSnapshot.getChildren()){
+                    MyLoc loc=shot.getValue(MyLoc.class);
+                    float[] lcs=new float[2];
+                    Location.distanceBetween(loc.getLat(),loc.getLang(),marker.getPosition().latitude,marker.getPosition().longitude,lcs);
+                    if (lcs[0]<8){
+                        Intent intent=new Intent(UserMaps.this,Book.class);
+                        intent.putExtra("key",shot.getKey());
+                        intent.putExtra("lat",loc.getLat());
+                        intent.putExtra("lang",loc.getLang());
+                        intent.putExtra("dlat",myloc.getLatitude());
+                        intent.putExtra("dlang",myloc.getLongitude());
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return false;
     }
 }
