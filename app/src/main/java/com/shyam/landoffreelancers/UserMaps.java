@@ -59,7 +59,7 @@ public class UserMaps extends AppCompatActivity
         getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.usermap);
         FirebaseApp.initializeApp(this);
-        text=findViewById(R.id.userdisplay);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mapFragment.getMapAsync(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -69,6 +69,10 @@ public class UserMaps extends AppCompatActivity
         toggle.syncState();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        text=navigationView.getHeaderView(0).findViewById(R.id.userdisplay);
+        if (text!=null){
+            text.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
         navigationView.setNavigationItemSelectedListener(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

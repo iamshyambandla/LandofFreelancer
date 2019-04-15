@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
@@ -24,9 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.concurrent.TimeUnit;
 
 public class UserSign extends AppCompatActivity {
-    private EditText name,phone,password,cpass,email;
-    private Button usercont;
+    private EditText name,phone,password,cpass,email,otp;
+    private Button usercont,usersubmit;
     private FirebaseAuth mAuth;
+    private LinearLayout first,second;
+    private String userotp,verification;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +39,13 @@ public class UserSign extends AppCompatActivity {
         phone=findViewById(R.id.userphone);
         password=findViewById(R.id.userpass);
         cpass=findViewById(R.id.usercpass);
+        usersubmit=findViewById(R.id.usersubmit);
+
         usercont=findViewById(R.id.usercont);
         email=findViewById(R.id.useremail);
+        first=findViewById(R.id.userfirst);
+        second=findViewById(R.id.usersecond);
+        second.setVisibility(View.GONE);
         FirebaseApp.initializeApp(this);
         mAuth=FirebaseAuth.getInstance();
         usercont.setOnClickListener(new View.OnClickListener() {
@@ -45,8 +54,51 @@ public class UserSign extends AppCompatActivity {
                 verify();
             }
         });
+        usersubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userotp=otp.getText().toString();
+                PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,userotp);
+                signin(credential);
+            }
+        });
 
+    }
+    private void signin(PhoneAuthCredential credential){
+        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
+                    int len = password.getText().length();
+                    if (len >= 6) {
+                        mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
+                                Toast.makeText(UserSign.this, "completed", Toast.LENGTH_SHORT).show();
+                                FirebaseApp.initializeApp(getApplicationContext());
+                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+                                String[] m=email.getText().toString().split("@");
+                                databaseReference.child("users").child(m[0]).setValue("user");
+                                Intent i = new Intent(UserSign.this, UserMaps.class);
+                                startActivity(i);
+                            }
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(UserSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }else {
+                        Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
     private void verify(){
         PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
@@ -59,40 +111,15 @@ public class UserSign extends AppCompatActivity {
 
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
-            if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                int len = password.getText().length();
-                if (len >= 6) {
-                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            Toast.makeText(UserSign.this, "completed", Toast.LENGTH_SHORT).show();
-                            FirebaseApp.initializeApp(getApplicationContext());
-                            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-                            String[] m=email.getText().toString().split("@");
-                            databaseReference.child("users").child(m[0]).setValue("user");
-                            Intent i = new Intent(UserSign.this, UserMaps.class);
-                            startActivity(i);
-                        }
-
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(UserSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }else {
-                    Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                }
-            }else {
-                Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-            }
         }
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            second.setVisibility(View.VISIBLE);
+            first.setVisibility(View.GONE);
+            verification=s;
             Toast.makeText(getApplicationContext(),"sent",Toast.LENGTH_SHORT).show();
         }
 

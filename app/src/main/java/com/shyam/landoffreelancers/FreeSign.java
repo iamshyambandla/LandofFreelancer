@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,11 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.concurrent.TimeUnit;
 
 public class FreeSign extends AppCompatActivity {
-    private EditText name,phone,password,cpass,email;
-    private Button freecont;
+    private EditText name,phone,password,cpass,email,otp;
+    private Button freecont,freesubmit;
     Spinner spinner;
     private FirebaseAuth mAuth;
     String selected;
+    private LinearLayout first,second;
+    String verification;
     private String[] profs={"nothing","Photographer","Editor","Designer"};
 
     @Override
@@ -46,8 +49,13 @@ public class FreeSign extends AppCompatActivity {
         freecont=findViewById(R.id.freecont);
         email=findViewById(R.id.freemail);
         spinner=findViewById(R.id.freespin);
+        otp=findViewById(R.id.freeotp);
+        freesubmit=findViewById(R.id.freesubmit);
         FirebaseApp.initializeApp(this);
         mAuth=FirebaseAuth.getInstance();
+        first=findViewById(R.id.first);
+        second=findViewById(R.id.second);
+        second.setVisibility(View.GONE);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,R.layout.item,R.id.list_item,profs);
         spinner.setAdapter(adapter);
         freecont.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +82,61 @@ public class FreeSign extends AppCompatActivity {
 
             }
         });
+        freesubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String freeotp=otp.getText().toString();
+                PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,freeotp);
+                signin(credential);
+            }
+        });
+    }
+    private void signin(PhoneAuthCredential credential){
+        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                mAuth.signOut();
+                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
+                    int len = password.getText().length();
+                    if (len >= 6) {
+                        mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            }
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(FreeSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Toast.makeText(FreeSign.this, "completed", Toast.LENGTH_SHORT).show();
+                                        String[] m=email.getText().toString().split("@");
+                                        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+                                        databaseReference.child("users").child(m[0]).setValue("free");
+                                        Intent i = new Intent(FreeSign.this, Maps.class);
+                                        startActivity(i);
+                                    }
+                                });
+
+
+                            }
+                        });
+
+                    }else {
+                        Toast.makeText(FreeSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(FreeSign.this, "password not matching", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -81,50 +144,17 @@ public class FreeSign extends AppCompatActivity {
 
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
-            if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                int len = password.getText().length();
-                if (len >= 6) {
-                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        }
-
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(FreeSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    Toast.makeText(FreeSign.this, "completed", Toast.LENGTH_SHORT).show();
-                                    String[] m=email.getText().toString().split("@");
-                                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
-                                    databaseReference.child("users").child(m[0]).setValue("free");
-                                    Intent i = new Intent(FreeSign.this, Maps.class);
-                                    startActivity(i);
-                                }
-                            });
-
-
-                        }
-                    });
-
-                }else {
-                    Toast.makeText(FreeSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                }
-            }else {
-                Toast.makeText(FreeSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-            }
         }
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            first.setVisibility(View.GONE);
+            second.setVisibility(View.VISIBLE);
+             verification=s;
+
+
             Toast.makeText(getApplicationContext(),"sent",Toast.LENGTH_SHORT).show();
         }
 

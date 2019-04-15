@@ -11,7 +11,8 @@ import android.widget.ListView;
 public class Search extends AppCompatActivity {
 private ListView listView;
 private ArrayAdapter<String> adapter;
-private String[] profs={"Photographer","Editor","Designer"};
+private String[] profs={"nothing","Event Managing","Orchestra","Photography","Food catering","Fashion designing","Packers and movers"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -26,7 +26,7 @@ private Button submit;
 private Spinner spinner;
 private String selected;
     ArrayAdapter<String> adapter;
-private String[] profs={"nothing","Photographer","Editor","Designer"};
+   private String[] profs={"nothing","Event Managing","Orchestra","Photography","Food catering","Fashion designing","Packers and movers"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

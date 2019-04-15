@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,39 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private Button signin;
     private TextView signup,forgot;
     private FirebaseAuth mAuth;
+    private AppCompatCheckBox box;
 
     @Override
     protected void onStart() {
-        if (FirebaseAuth.getInstance().getCurrentUser()!=null){
-            FirebaseApp.initializeApp(getApplicationContext());
-            final DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-            String s=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            String[] m=s.split("@");
-            databaseReference.child("users").child(m[0]).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    try {
 
-
-                    if (dataSnapshot.getValue().toString().contentEquals("free")){
-                        Intent intent=new Intent(MainActivity.this,Maps.class);
-                        startActivity(intent);
-                    }else if (dataSnapshot.getValue().toString().contentEquals("user")){
-                        Intent intent=new Intent(MainActivity.this,UserMaps.class);
-                        startActivity(intent);
-                    }
-                }catch (Exception e){
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-        }
         super.onStart();
     }
 
@@ -81,9 +57,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         forgot=findViewById(R.id.forgot);
-
+        box=findViewById(R.id.check);
         FirebaseApp.initializeApp(this);
         mAuth=FirebaseAuth.getInstance();
+        box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }else {
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

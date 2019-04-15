@@ -19,18 +19,40 @@
          android:inputType="textEmailAddress"
          android:hint="Email"
          android:paddingLeft="20dp"
-
+         android:textColor="#fff"
+         android:textColorHint="#fff"
          android:id="@+id/username"/>
      <EditText
          android:layout_width="match_parent"
          android:layout_height="60dp"
-
+         android:textColor="#fff"
+         android:textColorHint="#fff"
          android:layout_marginHorizontal="16dp"
          android:hint="password"
+         android:paddingLeft="20dp"
          android:inputType="textPassword"
          android:layout_marginBottom="16dp"
 
          android:id="@+id/password"/>
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="60dp"
+         >
+         <android.support.v7.widget.AppCompatCheckBox
+             android:layout_width="50dp"
+             android:layout_height="50dp"
+             android:id="@+id/check"
+             android:textColor="#fff"
+             android:layout_marginLeft="60dp"
+             android:layout_gravity="center_horizontal"
+             android:gravity="center_horizontal"
+             />
+         <TextView
+             android:layout_width="wrap_content"
+             android:textColor="#fff"
+             android:layout_height="50dp"
+             android:text="show password"/>
+     </LinearLayout>
 
      <Button
          android:id="@+id/signin"

@@ -69,9 +69,13 @@ public class Maps extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        text=findViewById(R.id.displayname);
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        text=navigationView.getHeaderView(0).findViewById(R.id.displayname);
+        if (text!=null){
+            text.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
         navigationView.setNavigationItemSelectedListener(this);
         mapFragment.getMapAsync(this);
         FirebaseApp.initializeApp(this);

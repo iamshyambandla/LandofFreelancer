@@ -2,9 +2,11 @@ package com.shyam.landoffreelancers;
 
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -38,21 +40,31 @@ private Button call;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Lancer profile=dataSnapshot.getValue(Lancer.class);
+                try {
+                    cost.setText(profile.getCost());
+                    name.setText(profile.getName());
+                    phone.setText(profile.getNumber());
+                    status.setText(profile.getStatus());
+                    float[] dist = new float[2];
+                    Location.distanceBetween(lat, lang, dlat, dlang, dist);
+                    distance.setText(String.valueOf(dist[0]) + "m");
+                }catch(Exception e){
 
-                cost.setText(profile.getCost());
-                name.setText(profile.getName());
-                phone.setText(profile.getNumber());
-                status.setText(profile.getStatus());
-                float[] dist=new float[2];
-                Location.distanceBetween(lat,lang,dlat,dlang,dist);
-                distance.setText(String.valueOf(dist[0])+"m");
-
+                }
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1=new Intent(Intent.ACTION_CALL);
+                intent1.setData(Uri.parse("tel:+91"+phone.getText().toString()));
+                startActivity(intent1);
             }
         });
     }
