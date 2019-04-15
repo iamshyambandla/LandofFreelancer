@@ -87,7 +87,34 @@ public class MainActivity extends AppCompatActivity {
                 }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseApp.initializeApp(getApplicationContext());
+                        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                        String s = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                        String[] m = s.split("@");
+                        databaseReference.child("users").child(m[0]).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                try {
 
+                                    if (dataSnapshot.getValue().toString().contentEquals("free")) {
+                                        Intent intent = new Intent(MainActivity.this, Maps.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else if (dataSnapshot.getValue().toString().contentEquals("user")) {
+                                        Intent intent = new Intent(MainActivity.this, UserMaps.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                } catch (Exception e) {
+                                    Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                         Toast.makeText(MainActivity.this, "successfully signedin", Toast.LENGTH_SHORT).show();
                     }
                 });
