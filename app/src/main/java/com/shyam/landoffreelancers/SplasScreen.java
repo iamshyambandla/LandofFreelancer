@@ -35,7 +35,7 @@ public class SplasScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                get();
+              //  get();
 
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                         FirebaseApp.initializeApp(getApplicationContext());

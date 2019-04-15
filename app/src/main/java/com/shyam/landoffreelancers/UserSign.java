@@ -59,15 +59,31 @@ public class UserSign extends AppCompatActivity {
             public void onClick(View v) {
                 userotp=otp.getText().toString();
                 PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,userotp);
-                signin(credential);
+                if (verification.contentEquals(userotp)) {
+                    signin();
+                }
             }
         });
 
     }
-    private void signin(PhoneAuthCredential credential){
-        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
+    private void signin(){
+
+
+
+    }
+    private void verify(){
+        PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
+                this,mcallbacks
+        );
+    }
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        @Override
+
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            otp.setText(phoneAuthCredential.getSmsCode());
+            if (phoneAuthCredential.getSmsCode().contentEquals(otp.getText().toString())) {
+                Toast.makeText(getApplicationContext(), "verified", Toast.LENGTH_SHORT).show();
                 if (password.getText().toString().contentEquals(cpass.getText().toString())) {
                     int len = password.getText().length();
                     if (len >= 6) {
@@ -77,8 +93,8 @@ public class UserSign extends AppCompatActivity {
 
                                 Toast.makeText(UserSign.this, "completed", Toast.LENGTH_SHORT).show();
                                 FirebaseApp.initializeApp(getApplicationContext());
-                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-                                String[] m=email.getText().toString().split("@");
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                                String[] m = email.getText().toString().split("@");
                                 databaseReference.child("users").child(m[0]).setValue("user");
                                 Intent i = new Intent(UserSign.this, UserMaps.class);
                                 startActivity(i);
@@ -91,27 +107,13 @@ public class UserSign extends AppCompatActivity {
                             }
                         });
 
-                    }else {
+                    } else {
                         Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
-    }
-    private void verify(){
-        PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
-                this,mcallbacks
-        );
-    }
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        @Override
-
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
-
         }
 
         @Override
@@ -125,6 +127,7 @@ public class UserSign extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+
             Toast.makeText(UserSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     };
