@@ -30,7 +30,7 @@ public class UserSign extends AppCompatActivity {
     private Button usercont,usersubmit;
     private FirebaseAuth mAuth;
     private LinearLayout first,second;
-    private String userotp,verification;
+    private String userotp,verification,pass,conpass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +40,7 @@ public class UserSign extends AppCompatActivity {
         password=findViewById(R.id.userpass);
         cpass=findViewById(R.id.usercpass);
         usersubmit=findViewById(R.id.usersubmit);
-
+        otp=findViewById(R.id.userotp);
         usercont=findViewById(R.id.usercont);
         email=findViewById(R.id.useremail);
         first=findViewById(R.id.userfirst);
@@ -51,7 +51,13 @@ public class UserSign extends AppCompatActivity {
         usercont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verify();
+                pass=password.getText().toString();
+                conpass=cpass.getText().toString();
+                if (pass.contentEquals(conpass)) {
+                    verify();
+                } else {
+                Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
+            }
             }
         });
         usersubmit.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +74,8 @@ public class UserSign extends AppCompatActivity {
         mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                    int len = password.getText().length();
+
+                    int len = pass.length();
                     if (len >= 6) {
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
@@ -94,9 +100,7 @@ public class UserSign extends AppCompatActivity {
                     }else {
                         Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
                     }
-                }else {
-                    Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
     }
@@ -117,6 +121,7 @@ public class UserSign extends AppCompatActivity {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+
             second.setVisibility(View.VISIBLE);
             first.setVisibility(View.GONE);
             verification=s;

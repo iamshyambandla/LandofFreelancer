@@ -92,13 +92,9 @@ public class FreeSign extends AppCompatActivity {
         });
     }
     private void signin(PhoneAuthCredential credential){
-        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                mAuth.signOut();
-                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                    int len = password.getText().length();
-                    if (len >= 6) {
+
+
+
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -129,14 +125,9 @@ public class FreeSign extends AppCompatActivity {
                             }
                         });
 
-                    }else {
-                        Toast.makeText(FreeSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    Toast.makeText(FreeSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
+
+
     }
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
