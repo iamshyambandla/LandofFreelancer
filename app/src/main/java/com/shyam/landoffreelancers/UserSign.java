@@ -30,7 +30,7 @@ public class UserSign extends AppCompatActivity {
     private Button usercont,usersubmit;
     private FirebaseAuth mAuth;
     private LinearLayout first,second;
-    private String userotp,verification;
+    private String userotp,verification,pass,conpass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +40,7 @@ public class UserSign extends AppCompatActivity {
         password=findViewById(R.id.userpass);
         cpass=findViewById(R.id.usercpass);
         usersubmit=findViewById(R.id.usersubmit);
-
+        otp=findViewById(R.id.userotp);
         usercont=findViewById(R.id.usercont);
         email=findViewById(R.id.useremail);
         first=findViewById(R.id.userfirst);
@@ -51,7 +51,13 @@ public class UserSign extends AppCompatActivity {
         usercont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verify();
+                pass=password.getText().toString();
+                conpass=cpass.getText().toString();
+                if (pass.contentEquals(conpass)) {
+                    verify();
+                } else {
+                Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
+            }
             }
         });
         usersubmit.setOnClickListener(new View.OnClickListener() {
@@ -59,33 +65,17 @@ public class UserSign extends AppCompatActivity {
             public void onClick(View v) {
                 userotp=otp.getText().toString();
                 PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,userotp);
-                if (verification.contentEquals(userotp)) {
-                    signin();
-                }
+                signin(credential);
             }
         });
 
     }
-    private void signin(){
+    private void signin(PhoneAuthCredential credential){
+        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
 
-
-
-    }
-    private void verify(){
-        PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
-                this,mcallbacks
-        );
-    }
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        @Override
-
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            otp.setText(phoneAuthCredential.getSmsCode());
-            if (phoneAuthCredential.getSmsCode().contentEquals(otp.getText().toString())) {
-                Toast.makeText(getApplicationContext(), "verified", Toast.LENGTH_SHORT).show();
-                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                    int len = password.getText().length();
+                    int len = pass.length();
                     if (len >= 6) {
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
@@ -93,8 +83,8 @@ public class UserSign extends AppCompatActivity {
 
                                 Toast.makeText(UserSign.this, "completed", Toast.LENGTH_SHORT).show();
                                 FirebaseApp.initializeApp(getApplicationContext());
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                                String[] m = email.getText().toString().split("@");
+                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+                                String[] m=email.getText().toString().split("@");
                                 databaseReference.child("users").child(m[0]).setValue("user");
                                 Intent i = new Intent(UserSign.this, UserMaps.class);
                                 startActivity(i);
@@ -107,18 +97,31 @@ public class UserSign extends AppCompatActivity {
                             }
                         });
 
-                    } else {
+                    }else {
                         Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(UserSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-                }
+
             }
+        });
+    }
+    private void verify(){
+        PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
+                this,mcallbacks
+        );
+    }
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        @Override
+
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
+
         }
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+
             second.setVisibility(View.VISIBLE);
             first.setVisibility(View.GONE);
             verification=s;
@@ -127,7 +130,6 @@ public class UserSign extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-
             Toast.makeText(UserSign.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     };

@@ -87,19 +87,14 @@ public class FreeSign extends AppCompatActivity {
             public void onClick(View v) {
                 String freeotp=otp.getText().toString();
                 PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,freeotp);
-                if(freeotp.contentEquals(verification)){
-                    signin();
-                }
-
-
+                signin(credential);
             }
         });
     }
-    private void signin(){
+    private void signin(PhoneAuthCredential credential){
 
-                if (password.getText().toString().contentEquals(cpass.getText().toString())) {
-                    int len = password.getText().length();
-                    if (len >= 6) {
+
+
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -130,12 +125,7 @@ public class FreeSign extends AppCompatActivity {
                             }
                         });
 
-                    }else {
-                        Toast.makeText(FreeSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    Toast.makeText(FreeSign.this, "password not matching", Toast.LENGTH_SHORT).show();
-                }
+
 
 
     }

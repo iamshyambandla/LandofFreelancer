@@ -11,13 +11,36 @@
         android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="vertical"
-            android:id="@+id/userfirst"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/usersecond"
+                android:orientation="vertical"
+                android:layout_marginTop="100dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:id="@+id/userotp"
+                    android:textColor="#fff"
+                    android:textColorHint="#fff"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/submit"
+                    android:paddingTop="20dp"
+                    android:id="@+id/usersubmit"
+                    android:background="#fff"
+                    android:layout_marginHorizontal="20dp"/>
+            </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
+        android:id="@+id/userfirst"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -90,28 +113,7 @@
             android:layout_marginHorizontal="20dp"
             android:id="@+id/usercont"/>
     </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:id="@+id/usersecond"
-                android:orientation="vertical"
-                android:layout_marginTop="100dp"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:id="@+id/userotp"
-                    android:textColor="#fff"
-                    android:textColorHint="#fff"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:text="@string/submit"
-                    android:paddingTop="20dp"
-                    android:id="@+id/usersubmit"
-                    android:background="#fff"
-                    android:layout_marginHorizontal="20dp"/>
-            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
