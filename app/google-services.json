@@ -1,46 +1,42 @@
 {
   "project_info": {
-    "project_number": "168275164439",
-    "firebase_url": "https://landoffreelancers.firebaseio.com",
-    "project_id": "landoffreelancers",
-    "storage_bucket": "landoffreelancers.appspot.com"
+    "project_number": "721738210093",
+    "firebase_url": "https://landoffreelancers-43900.firebaseio.com",
+    "project_id": "landoffreelancers-43900",
+    "storage_bucket": "landoffreelancers-43900.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:168275164439:android:9d0d88741dbaaca8",
+        "mobilesdk_app_id": "1:721738210093:android:efb71417717821dd",
         "android_client_info": {
-          "package_name": "com.shyam.landoffreelancers"
+          "package_name": "com.ram.landoffreelancers"
         }
       },
       "oauth_client": [
         {
-          "client_id": "168275164439-v6p7r4krnjf8inqheojih4asfidlqcne.apps.googleusercontent.com",
+          "client_id": "721738210093-urdaga1578jfdlv420ehpm2monqh7irk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.shyam.landoffreelancers",
+            "package_name": "com.ram.landoffreelancers",
             "certificate_hash": "e7655772aeda7fc6872f8cf03b563d62a8d2294a"
           }
         },
         {
-          "client_id": "168275164439-92d85srlgqio45oclsj45d8kdi2m3rk7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.shyam.landoffreelancers",
-            "certificate_hash": "f165c2187e0b0f53c5d0a82b0d0b9ee33fcf169d"
-          }
+          "client_id": "721738210093-1vvouhsuvnnsbt0sb3l996ngvb584jt6.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAHEUFhHm-SFkAoHuIWY-h1ssb68anHrho"
+          "current_key": "AIzaSyBElqksI-C5Vdw92giBTD1TKXdNTAIss9s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "168275164439-autnmccmouim7fo0m3m5ssjr34m2cing.apps.googleusercontent.com",
+              "client_id": "721738210093-1vvouhsuvnnsbt0sb3l996ngvb584jt6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

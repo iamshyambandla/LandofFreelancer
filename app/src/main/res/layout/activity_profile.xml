@@ -18,11 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginHorizontal="20dp"
+            android:textColor="#fff"
             android:paddingLeft="20dp"
             android:layout_marginTop="20dp"
             android:hint="cost" />
         <EditText
             android:id="@+id/profname"
+            android:textColor="#fff"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginHorizontal="20dp"
@@ -30,14 +32,32 @@
             android:paddingLeft="20dp"
             android:hint="name" />
 
-        <EditText
-            android:id="@+id/timings"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginHorizontal="20dp"
+        <LinearLayout
             android:layout_marginTop="20dp"
-            android:paddingLeft="20dp"
-            android:hint="timings" />
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="60dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:text="from"
+                android:background="#fff"
+                android:id="@+id/from"/>
+            <TextView
+                android:layout_width="20dp"
+                android:text="to"
+                android:layout_marginHorizontal="10dp"
+                android:textColor="#fff"
+                android:layout_height="60dp" />
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:text="to"
+                android:textColor="#000"
+                android:background="#fff"
+
+                android:id="@+id/to"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/profphone"
@@ -46,6 +66,7 @@
             android:layout_marginHorizontal="20dp"
             android:hint="Phone"
             android:paddingLeft="20dp"
+            android:textColor="#fff"
             android:layout_marginTop="20dp"
             android:inputType="phone"
              />
