@@ -85,16 +85,12 @@ public class FreeSign extends AppCompatActivity {
         freesubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String freeotp=otp.getText().toString();
-                PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,freeotp);
-                signin(credential);
+            if (verification.contentEquals(otp.getText().toString()))
+                signin();
             }
         });
     }
-    private void signin(PhoneAuthCredential credential){
-
-
-
+    private void signin(){
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -134,7 +130,8 @@ public class FreeSign extends AppCompatActivity {
         @Override
 
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
+            verification=phoneAuthCredential.getSmsCode();
+            Toast.makeText(FreeSign.this, verification, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -146,7 +143,7 @@ public class FreeSign extends AppCompatActivity {
              verification=s;
 
 
-            Toast.makeText(getApplicationContext(),"sent",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
         }
 
         @Override

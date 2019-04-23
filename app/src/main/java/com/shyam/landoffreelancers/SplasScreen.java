@@ -23,7 +23,12 @@ public class SplasScreen extends AppCompatActivity {
     boolean state=false;
     @Override
     protected void onStart() {
-
+        if (ActivityCompat.checkSelfPermission(SplasScreen.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SplasScreen.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SplasScreen.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }else{
+            // Write you code here if permission already given.
+        }
         super.onStart();
 
     }

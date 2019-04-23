@@ -63,20 +63,17 @@ public class UserSign extends AppCompatActivity {
         usersubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userotp=otp.getText().toString();
-                PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verification,userotp);
-                signin(credential);
+                if (verification.contentEquals(otp.getText().toString())) {
+                    signin();
+                }
             }
         });
 
     }
-    private void signin(PhoneAuthCredential credential){
-        mAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
+    private void signin(){
 
-                    int len = pass.length();
-                    if (len >= 6) {
+
+
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -97,13 +94,10 @@ public class UserSign extends AppCompatActivity {
                             }
                         });
 
-                    }else {
-                        Toast.makeText(UserSign.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                    }
+
 
             }
-        });
-    }
+
     private void verify(){
         PhoneAuthProvider.getInstance().verifyPhoneNumber("+91"+phone.getText().toString(),60, TimeUnit.SECONDS,
                 this,mcallbacks
@@ -114,7 +108,7 @@ public class UserSign extends AppCompatActivity {
         @Override
 
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            Toast.makeText(getApplicationContext(),"verified",Toast.LENGTH_SHORT).show();
+            verification=phoneAuthCredential.getSmsCode();
 
         }
 
